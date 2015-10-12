@@ -2,6 +2,8 @@
 
 Control to just select an area and provide bbox for it
 
+## [Demo](http://w8r.github.io/leaflet-area-select/example/)
+
 ## Include
 
 ### Browserify, Webpack
@@ -51,3 +53,7 @@ map.selectArea.setValidate((layerPoint) => {
 map.selectArea.setValidate();
 
 ```
+
+## License
+
+MIT
