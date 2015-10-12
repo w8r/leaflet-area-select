@@ -12,7 +12,7 @@ Control to just select an area and provide bbox for it
 npm install --save leaflet-area-select
 ```
 
-```js
+```javascript
 var SelectArea = require('leaflet-area-select');
 // or
 import SelectArea from 'leaflet-area-select';
@@ -28,7 +28,7 @@ import SelectArea from 'leaflet-area-select';
 Including the handler into the project will automatically add it to the `L.Map`, 
 so to enable/disable it you can use methods:
 
-```
+```javascript
 let map = new L.Map('map', {
   selectArea: true // will enable it by default
 });
