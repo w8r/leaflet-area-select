@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "tape test/**/*.test.js",
+    "test": "browserify ./test/*.test.js | tap-closer | smokestack | tap-status",
     "start": "npm run watch & serve -p 3001",
     "watch": "watchify -v -d -u 'leaflet' -s L.Control.Select example/js/app.js -o example/js/bundle.js",
     "build": "npm run build-js && npm run compress",
@@ -48,7 +48,9 @@
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
     "less": "^2.5.3",
+    "smokestack": "^3.4.1",
     "tap-closer": "^1.0.0",
+    "tap-status": "^1.0.1",
     "tape": "^4.2.1",
     "uglify-js": "^2.5.0",
     "watchify": "^3.4.0"

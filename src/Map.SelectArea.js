@@ -27,9 +27,30 @@ export default class SelectArea extends L.Map.BoxZoom {
   constructor(map, shiftKey = false, validate, autoDisable) {
     super(map);
 
+    /**
+     * @type {Boolean}
+     */
     this.shiftKey = shiftKey;
 
+    /**
+     * @type {Function}
+     */
+    this._validate = null;
+
+    /**
+     * @type {Boolean}
+     */
     this._moved = false;
+
+    /**
+     * @type {Boolean}
+     */
+    this._autoDisable = false;
+
+    /**
+     * @type {L.Point}
+     */
+    this._lastLayerPoint = null;
 
     this.setValidate(validate);
     this.setAutoDisable(autoDisable);
@@ -51,11 +72,13 @@ export default class SelectArea extends L.Map.BoxZoom {
    * @param {Boolean} autoDisable
    */
   setAutoDisable (autoDisable = false) {
-    this.autoDisable = autoDisable;
+    this._autoDisable = autoDisable;
   }
 
   /**
    * Disable dragging or zoombox
+   * @param {Function=} validate
+   * @param {Boolean=}  autoDisable
    */
   enable (validate, autoDisable) {
     if (this.shiftKey) {
@@ -69,8 +92,27 @@ export default class SelectArea extends L.Map.BoxZoom {
     this._beforeCrosshair = this._container.style.cursor;
     this._container.style.cursor = 'crosshair';
 
-    L.DomEvent.on(document, 'keydown', this._onKeyUp, this);
+    this.setValidate(validate);
+    this.setAutoDisable(autoDisable);
+
     this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
+  }
+
+  /**
+   * Also listen to ESC to cancel interaction
+   * @override
+   */
+  addHooks () {
+    super.addHooks();
+    L.DomEvent.on(document, 'keyup', this._onKeyUp, this);
+  }
+
+  /**
+   * @override
+   */
+  removeHooks () {
+    super.removeHooks();
+    L.DomEvent.off(document, 'keyup', this._onKeyUp, this);
   }
 
   /**
@@ -86,7 +128,7 @@ export default class SelectArea extends L.Map.BoxZoom {
     } else {
       this._map.dragging.enable();
     }
-    L.DomEvent.on(document, 'keydown', this._onKeyUp, this);
+
     this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
   }
 
@@ -95,6 +137,7 @@ export default class SelectArea extends L.Map.BoxZoom {
    */
   _onMouseDown (e) {
     this._moved = false;
+    this._lastLayerPoint = null;
 
     if ((this.shiftKey && !e.shiftKey) ||
       ((e.which !== 1) && (e.button !== 1))) {
@@ -136,6 +179,7 @@ export default class SelectArea extends L.Map.BoxZoom {
     const offset = layerPoint.subtract(startPoint);
 
     if (!this._validate(layerPoint)) return;
+    this._lastLayerPoint = layerPoint;
 
     let newPos = new L.Point(
         Math.min(layerPoint.x, startPoint.x),
@@ -172,12 +216,9 @@ export default class SelectArea extends L.Map.BoxZoom {
     this._finish();
 
     const map = this._map;
-    const layerPoint = map.mouseEventToLayerPoint(e);
+    const layerPoint = this._lastLayerPoint; // map.mouseEventToLayerPoint(e);
 
-    if (this._startLayerPoint.equals(layerPoint)) {
-      return;
-    }
-
+    if (this._startLayerPoint.equals(layerPoint)) return;
     L.DomEvent.stop(e);
 
     let bounds = new L.LatLngBounds(
@@ -190,7 +231,7 @@ export default class SelectArea extends L.Map.BoxZoom {
       bounds: bounds
     });
 
-    if (this.autoDisable) this.disable();
+    if (this._autoDisable) this.disable();
 
     this._moved = false;
   }

@@ -68,9 +68,30 @@ var SelectArea = (function (_L$Map$BoxZoom) {
 
     _get(Object.getPrototypeOf(SelectArea.prototype), 'constructor', this).call(this, map);
 
+    /**
+     * @type {Boolean}
+     */
     this.shiftKey = shiftKey;
 
+    /**
+     * @type {Function}
+     */
+    this._validate = null;
+
+    /**
+     * @type {Boolean}
+     */
     this._moved = false;
+
+    /**
+     * @type {Boolean}
+     */
+    this._autoDisable = false;
+
+    /**
+     * @type {L.Point}
+     */
+    this._lastLayerPoint = null;
 
     this.setValidate(validate);
     this.setAutoDisable(autoDisable);
@@ -105,11 +126,13 @@ var SelectArea = (function (_L$Map$BoxZoom) {
     value: function setAutoDisable() {
       var autoDisable = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 
-      this.autoDisable = autoDisable;
+      this._autoDisable = autoDisable;
     }
 
     /**
      * Disable dragging or zoombox
+     * @param {Function=} validate
+     * @param {Boolean=}  autoDisable
      */
   }, {
     key: 'enable',
@@ -125,8 +148,31 @@ var SelectArea = (function (_L$Map$BoxZoom) {
       this._beforeCrosshair = this._container.style.cursor;
       this._container.style.cursor = 'crosshair';
 
-      L.DomEvent.on(document, 'keydown', this._onKeyUp, this);
+      this.setValidate(validate);
+      this.setAutoDisable(autoDisable);
+
       this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
+    }
+
+    /**
+     * Also listen to ESC to cancel interaction
+     * @override
+     */
+  }, {
+    key: 'addHooks',
+    value: function addHooks() {
+      _get(Object.getPrototypeOf(SelectArea.prototype), 'addHooks', this).call(this);
+      L.DomEvent.on(document, 'keyup', this._onKeyUp, this);
+    }
+
+    /**
+     * @override
+     */
+  }, {
+    key: 'removeHooks',
+    value: function removeHooks() {
+      _get(Object.getPrototypeOf(SelectArea.prototype), 'removeHooks', this).call(this);
+      L.DomEvent.off(document, 'keyup', this._onKeyUp, this);
     }
 
     /**
@@ -144,7 +190,7 @@ var SelectArea = (function (_L$Map$BoxZoom) {
       } else {
         this._map.dragging.enable();
       }
-      L.DomEvent.on(document, 'keydown', this._onKeyUp, this);
+
       this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
     }
 
@@ -155,6 +201,7 @@ var SelectArea = (function (_L$Map$BoxZoom) {
     key: '_onMouseDown',
     value: function _onMouseDown(e) {
       this._moved = false;
+      this._lastLayerPoint = null;
 
       if (this.shiftKey && !e.shiftKey || e.which !== 1 && e.button !== 1) {
         return false;
@@ -194,6 +241,7 @@ var SelectArea = (function (_L$Map$BoxZoom) {
       var offset = layerPoint.subtract(startPoint);
 
       if (!this._validate(layerPoint)) return;
+      this._lastLayerPoint = layerPoint;
 
       var newPos = new L.Point(Math.min(layerPoint.x, startPoint.x), Math.min(layerPoint.y, startPoint.y));
 
@@ -231,12 +279,9 @@ var SelectArea = (function (_L$Map$BoxZoom) {
       this._finish();
 
       var map = this._map;
-      var layerPoint = map.mouseEventToLayerPoint(e);
+      var layerPoint = this._lastLayerPoint; // map.mouseEventToLayerPoint(e);
 
-      if (this._startLayerPoint.equals(layerPoint)) {
-        return;
-      }
-
+      if (this._startLayerPoint.equals(layerPoint)) return;
       L.DomEvent.stop(e);
 
       var bounds = new L.LatLngBounds(map.layerPointToLatLng(this._startLayerPoint), map.layerPointToLatLng(layerPoint));
@@ -247,7 +292,7 @@ var SelectArea = (function (_L$Map$BoxZoom) {
         bounds: bounds
       });
 
-      if (this.autoDisable) this.disable();
+      if (this._autoDisable) this.disable();
 
       this._moved = false;
     }
