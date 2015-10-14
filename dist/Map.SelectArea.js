@@ -148,7 +148,7 @@ var SelectArea = (function (_L$Map$BoxZoom) {
       this._beforeCrosshair = this._container.style.cursor;
       this._container.style.cursor = 'crosshair';
 
-      this.setValidate(validate);
+      if (validate) this.setValidate(validate);
       this.setAutoDisable(autoDisable);
 
       this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
