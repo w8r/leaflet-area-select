@@ -93,7 +93,17 @@ function toggleRestriction() {
   }
 }
 
+function toggleCtrlKey() {
+  map.selectArea.setControlKey(document.querySelector('#ctrl-key').checked);
+}
+
+function toggleShiftKey() {
+  map.selectArea.setShiftKey(document.querySelector('#shift-key').checked);
+}
+
 L.DomEvent.on(document.querySelector('#restriction'), 'change', toggleRestriction);
+//L.DomEvent.on(document.querySelector('#shift-key'), 'change', toggleShiftKey);
+L.DomEvent.on(document.querySelector('#ctrl-key'), 'change', toggleCtrlKey);
 
 // enable
 updateButton();

@@ -1,2 +1,2 @@
-export * from './src/Map.SelectArea';
+module.exports = require('./src/Map.SelectArea');
 

@@ -54,6 +54,19 @@ map.selectArea.setValidate();
 
 ```
 
+### Key-strokes
+
+```javascript
+// dragging will be enabled and you can 
+// start selecting with Ctrl key pressed
+map.selectArea.setCtrlKey(true); 
+
+// box-zoom will be disabled and you can 
+// start selecting with Shift key pressed
+map.selectArea.setCtrlKey(true); 
+
+```
+
 ## License
 
 MIT

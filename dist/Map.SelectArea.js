@@ -1,77 +1,70 @@
-(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g=(g.L||(g.L = {}));g=(g.Control||(g.Control = {}));g.Select = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-'use strict';
+/**
+ * L.Map.SelectArea - Area selection tool for leaflet
+ *
+ * @author Alexander Milevski <info@w8r.name>
+ * @see https://github.com/w8r/leaflet-area-select
+ * @license MIT
+ * @preserve
+ */
 
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
+// UMD
+(function(factory) {
+  var L;
+  if (typeof define === 'function' && define.amd) {
+    // AMD
+    define(['leaflet'], factory);
+  } else if (typeof module !== 'undefined') {
+    // Node/CommonJS
+    L = global.L || require('leaflet');
+    module.exports = factory(L);
+  } else {
+    // Browser globals
+    if (typeof window.L === 'undefined') {
+      throw new Error('Leaflet must be loaded first');
+    }
+    factory(window.L);
+  }
+})(function(L) {
 
-function _interopExportWildcard(obj, defaults) { var newObj = defaults({}, obj); delete newObj['default']; return newObj; }
-
-function _defaults(obj, defaults) { var keys = Object.getOwnPropertyNames(defaults); for (var i = 0; i < keys.length; i++) { var key = keys[i]; var value = Object.getOwnPropertyDescriptor(defaults, key); if (value && value.configurable && obj[key] === undefined) { Object.defineProperty(obj, key, value); } } return obj; }
-
-var _srcMapSelectArea = require('./src/Map.SelectArea');
-
-_defaults(exports, _interopExportWildcard(_srcMapSelectArea, _defaults));
-
-},{"./src/Map.SelectArea":2}],2:[function(require,module,exports){
-(function (global){
-"use strict";
-
-Object.defineProperty(exports, '__esModule', {
-  value: true
-});
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x3, _x4, _x5) { var _again = true; _function: while (_again) { var object = _x3, property = _x4, receiver = _x5; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x3 = parent; _x4 = property; _x5 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var L = global.L || require('leaflet');
+L.Util.trueFn = L.Util.trueFn || function() { return true; };
 
 /**
  * @class  L.Map.SelectArea
  * @extends {L.Map.BoxZoom}
  */
+L.Map.SelectArea = L.Map.BoxZoom.extend({
 
-var SelectArea = (function (_L$Map$BoxZoom) {
-  _inherits(SelectArea, _L$Map$BoxZoom);
-
-  _createClass(SelectArea, null, [{
-    key: 'AREA_SELECTED',
+  statics: {
 
     /**
      * @static
      * @type {String}
      */
-    get: function get() {
-      return 'areaselected';
-    }
-  }, {
-    key: 'AREA_SELECTION_TOGGLED',
-    get: function get() {
-      return 'areaselecttoggled';
-    }
+    AREA_SELECTED: 'areaselected',
 
     /**
-     * @param  {L.Map} map
-     * @constructor
+     * @static
+     * @type {String}
      */
-  }]);
+    AREA_SELECTION_TOGGLED: 'areaselecttoggled'
 
-  function SelectArea(map, shiftKey, validate, autoDisable) {
-    if (shiftKey === undefined) shiftKey = false;
+  },
 
-    _classCallCheck(this, SelectArea);
+  options: {
+    shiftKey: false,
+    ctrlKey: true,
+    validate: L.Util.trueFn,
+    autoDisable: false,
+    cursor: 'crosshair'
+  },
 
-    _get(Object.getPrototypeOf(SelectArea.prototype), 'constructor', this).call(this, map);
-
-    /**
-     * @type {Boolean}
-     */
-    this.shiftKey = shiftKey;
+  /**
+   * @param  {L.Map} map
+   * @constructor
+   */
+  initialize: function(map, options) {
+    L.Util.setOptions(this, options || {});
+    L.Map.BoxZoom.prototype.initialize.call(this, map);
 
     /**
      * @type {Function}
@@ -86,233 +79,271 @@ var SelectArea = (function (_L$Map$BoxZoom) {
     /**
      * @type {Boolean}
      */
-    this._autoDisable = false;
+    this._autoDisable = !this.options.ctrlKey && this.options.autoDisable;
 
     /**
      * @type {L.Point}
      */
     this._lastLayerPoint = null;
 
-    this.setValidate(validate);
-    this.setAutoDisable(autoDisable);
-  }
-
-  // expose setting
+    this.setValidate(this.options.validate);
+    this.setAutoDisable(this.options.autoDisable);
+  },
 
   /**
    * @param  {Function=} validate
    * @return {SelectArea}
    */
-
-  _createClass(SelectArea, [{
-    key: 'setValidate',
-    value: function setValidate() {
-      var validate = arguments.length <= 0 || arguments[0] === undefined ? function (layerPoint) {
-        return true;
-      } : arguments[0];
-
-      var handler = this;
-      this._validate = function (layerPoint) {
-        return validate.call(handler, layerPoint);
-      };
-      return this;
+  setValidate: function(validate) {
+    var handler = this;
+    if(typeof validate !== 'function') {
+      validate = L.Util.trueFn;
     }
+    this._validate = function(layerPoint) {
+      return validate.call(handler, layerPoint);
+    };
+    return this;
+  },
 
-    /**
-     * @param {Boolean} autoDisable
-     */
-  }, {
-    key: 'setAutoDisable',
-    value: function setAutoDisable() {
-      var autoDisable = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+  /**
+   * @param {Boolean} autoDisable
+   */
+  setAutoDisable: function(autoDisable) {
+    this._autoDisable = !!autoDisable;
+  },
 
-      this._autoDisable = autoDisable;
-    }
+  /**
+   * @param {Boolean} on
+   */
+  setControlKey: function(on) {
+    var wasEnabled = this._enabled;
+    if (wasEnabled) this.disable();
+    this.options.ctrlKey = !!on;
+    if (on) this.options.shiftKey = false;
+    if (wasEnabled) this.enable();
+  },
 
-    /**
-     * Disable dragging or zoombox
-     * @param {Function=} validate
-     * @param {Boolean=}  autoDisable
-     */
-  }, {
-    key: 'enable',
-    value: function enable(validate, autoDisable) {
-      if (this.shiftKey) {
-        if (this._map.boxZoom) {
-          this._map.boxZoom.disable();
-        }
-      } else {
-        this._map.dragging.disable();
+  /**
+   * @param {Boolean} on
+   */
+  setShiftKey: function(on) {
+    var wasEnabled = this._enabled;
+    if (wasEnabled) this.disable();
+    this.options.shiftKey = !!on;
+    if (on) this.options.ctrlKey = false;
+    if (wasEnabled) this.enable();
+  },
+
+  /**
+   * Disable dragging or zoombox
+   * @param {Function=} validate
+   * @param {Boolean=}  autoDisable
+   */
+  enable: function(validate, autoDisable) {
+    if (this.options.shiftKey) {
+      if (this._map.boxZoom) {
+        this._map.boxZoom.disable();
       }
-      _get(Object.getPrototypeOf(SelectArea.prototype), 'enable', this).call(this);
-      this._beforeCrosshair = this._container.style.cursor;
-      this._container.style.cursor = 'crosshair';
-
-      if (validate) this.setValidate(validate);
-      this.setAutoDisable(autoDisable);
-
-      this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
+    } else if (!this.options.ctrlKey) {
+      this._map.dragging.disable();
     }
+    L.Map.BoxZoom.prototype.enable.call(this);
 
-    /**
-     * Also listen to ESC to cancel interaction
-     * @override
-     */
-  }, {
-    key: 'addHooks',
-    value: function addHooks() {
-      _get(Object.getPrototypeOf(SelectArea.prototype), 'addHooks', this).call(this);
-      L.DomEvent.on(document, 'keyup', this._onKeyUp, this);
-    }
+    if(!this.options.ctrlKey) this._setCursor();
 
-    /**
-     * @override
-     */
-  }, {
-    key: 'removeHooks',
-    value: function removeHooks() {
-      _get(Object.getPrototypeOf(SelectArea.prototype), 'removeHooks', this).call(this);
-      L.DomEvent.off(document, 'keyup', this._onKeyUp, this);
-    }
+    if (validate) this.setValidate(validate);
+    this.setAutoDisable(autoDisable);
 
-    /**
-     * Re-enable box zoom or dragging
-     */
-  }, {
-    key: 'disable',
-    value: function disable() {
-      _get(Object.getPrototypeOf(SelectArea.prototype), 'disable', this).call(this, this);
-      this._container.style.cursor = this._beforeCrosshair;
-      if (this.shiftKey) {
-        if (this._map.boxZoom) {
-          this._map.boxZoom.enable();
-        }
-      } else {
-        this._map.dragging.enable();
+    this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
+  },
+
+  /**
+   * Re-enable box zoom or dragging
+   */
+  disable: function() {
+    L.Map.BoxZoom.prototype.disable.call(this);
+
+    if (!this.options.ctrlKey) this._restoreCursor();
+
+    if (this.options.shiftKey) {
+      if (this._map.boxZoom) {
+        this._map.boxZoom.enable();
       }
-
-      this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
+    } else {
+      this._map.dragging.enable();
     }
 
-    /**
-     * @override
-     */
-  }, {
-    key: '_onMouseDown',
-    value: function _onMouseDown(e) {
-      this._moved = false;
-      this._lastLayerPoint = null;
+    this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
+  },
 
-      if (this.shiftKey && !e.shiftKey || e.which !== 1 && e.button !== 1) {
-        return false;
+  /**
+   * Also listen to ESC to cancel interaction
+   * @override
+   */
+  addHooks: function() {
+    L.Map.BoxZoom.prototype.addHooks.call(this);
+    L.DomEvent
+      .on(document, 'keyup', this._onKeyUp, this)
+      .on(document, 'keydown', this._onKeyPress, this)
+      .on(document, 'contextmenu', this._onMouseDown, this);
+  },
+
+  /**
+   * @override
+   */
+  removeHooks: function() {
+    L.Map.BoxZoom.prototype.removeHooks.call(this);
+    L.DomEvent
+      .off(document, 'keyup', this._onKeyUp, this)
+      .off(document, 'keydown', this._onKeyPress, this)
+      .off(document, 'contextmenu', this._onMouseDown, this);
+  },
+
+  /**
+   * @override
+   */
+  _onMouseDown: function(e) {
+    this._moved = false;
+    this._lastLayerPoint = null;
+
+    if ((this.options.shiftKey && !e.shiftKey) ||
+      (this.options.ctrlKey && !e.ctrlKey) ||
+      ((e.which !== 1) && (e.button !== 1))) {
+      return false;
+    }
+
+    L.DomEvent.stop(e);
+
+    var layerPoint = this._map.mouseEventToLayerPoint(e);
+    if(!this._validate(layerPoint)) {
+      return false;
+    }
+
+    L.DomUtil.disableTextSelection();
+    L.DomUtil.disableImageDrag();
+
+    this._startLayerPoint = layerPoint;
+
+    L.DomEvent
+      .on(document, 'mousemove', this._onMouseMove, this)
+      .on(document, 'mouseup', this._onMouseUp, this)
+      .on(document, 'keydown', this._onKeyDown, this);
+  },
+
+  /**
+   * @override
+   */
+  _onMouseMove: function(e) {
+    if (!this._moved) {
+      this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._pane);
+      L.DomUtil.setPosition(this._box, this._startLayerPoint);
+    }
+
+    var startPoint = this._startLayerPoint;
+    var box = this._box;
+
+    var layerPoint = this._map.mouseEventToLayerPoint(e);
+    var offset = layerPoint.subtract(startPoint);
+
+    if (!this._validate(layerPoint)) return;
+    this._lastLayerPoint = layerPoint;
+
+    var newPos = new L.Point(
+        Math.min(layerPoint.x, startPoint.x),
+        Math.min(layerPoint.y, startPoint.y)
+    );
+
+    L.DomUtil.setPosition(box, newPos);
+
+    this._moved = true;
+
+    // TODO refactor: remove hardcoded 4 pixels
+    box.style.width = (Math.max(0, Math.abs(offset.x) - 4)) + 'px';
+    box.style.height = (Math.max(0, Math.abs(offset.y) - 4)) + 'px';
+  },
+
+  /**
+   * General on/off toggle
+   * @param  {KeyboardEvent} e
+   */
+  _onKeyUp: function(e) {
+    if (e.keyCode === 27) {
+      if (this._moved && this._box) {
+        this._finish();
       }
+      this.disable();
+    } else if (this.options.ctrlKey) {
+      this._restoreCursor();
+      this._map.dragging.enable();
+    }
+  },
 
-      var layerPoint = this._map.mouseEventToLayerPoint(e);
-      if (!this._validate(layerPoint)) {
-        return false;
-      }
+  /**
+   * Key down listener to enable on ctrl-press
+   * @param  {KeyboardEvent} e
+   */
+  _onKeyPress: function(e) {
+    if (this.options.ctrlKey && e.ctrlKey) {
+      this._setCursor();
+      this._map.dragging.disable();
+    }
+  },
 
-      L.DomUtil.disableTextSelection();
-      L.DomUtil.disableImageDrag();
+  /**
+   * Set crosshair cursor
+   */
+  _setCursor: function() {
+    this._beforeCursor = this._container.style.cursor;
+    this._container.style.cursor = this.options.cursor;
+  },
 
-      this._startLayerPoint = layerPoint;
+  /**
+   * Restore status quo cursor
+   */
+  _restoreCursor: function() {
+    this._container.style.cursor = this._beforeCursor;
+  },
 
-      L.DomEvent.on(document, 'mousemove', this._onMouseMove, this).on(document, 'mouseup', this._onMouseUp, this).on(document, 'keydown', this._onKeyDown, this);
+  /**
+   * @override
+   */
+  _onMouseUp: function (e) {
+
+    this._finish();
+
+    var map = this._map;
+    var layerPoint = this._lastLayerPoint; // map.mouseEventToLayerPoint(e);
+
+    if (this._startLayerPoint.equals(layerPoint)) return;
+    L.DomEvent.stop(e);
+
+    var bounds = new L.LatLngBounds(
+      map.layerPointToLatLng(this._startLayerPoint),
+      map.layerPointToLatLng(layerPoint));
+
+    //map.fitBounds(bounds);
+
+    map.fire(L.Map.SelectArea.AREA_SELECTED, {
+      bounds: bounds
+    });
+
+    if (this._autoDisable) {
+      this.disable();
+    } else {
+      this._setCursor();
     }
 
-    /**
-     * @override
-     */
-  }, {
-    key: '_onMouseMove',
-    value: function _onMouseMove(e) {
-      if (!this._moved) {
-        this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._pane);
-        L.DomUtil.setPosition(this._box, this._startLayerPoint);
+    this._moved = false;
+  }
 
-        //TODO refactor: move cursor to styles
-        this._container.style.cursor = 'crosshair';
-      }
+});
 
-      var startPoint = this._startLayerPoint;
-      var box = this._box;
-
-      var layerPoint = this._map.mouseEventToLayerPoint(e);
-      var offset = layerPoint.subtract(startPoint);
-
-      if (!this._validate(layerPoint)) return;
-      this._lastLayerPoint = layerPoint;
-
-      var newPos = new L.Point(Math.min(layerPoint.x, startPoint.x), Math.min(layerPoint.y, startPoint.y));
-
-      L.DomUtil.setPosition(box, newPos);
-
-      this._moved = true;
-
-      // TODO refactor: remove hardcoded 4 pixels
-      box.style.width = Math.max(0, Math.abs(offset.x) - 4) + 'px';
-      box.style.height = Math.max(0, Math.abs(offset.y) - 4) + 'px';
-    }
-
-    /**
-     * General on/off toggle
-     * @param  {KeyboardEvent} e
-     */
-  }, {
-    key: '_onKeyUp',
-    value: function _onKeyUp(e) {
-      if (e.keyCode === 27) {
-        if (this._moved) {
-          this._finish();
-        }
-        this.disable();
-      }
-    }
-
-    /**
-     * @override
-     */
-  }, {
-    key: '_onMouseUp',
-    value: function _onMouseUp(e) {
-
-      this._finish();
-
-      var map = this._map;
-      var layerPoint = this._lastLayerPoint; // map.mouseEventToLayerPoint(e);
-
-      if (this._startLayerPoint.equals(layerPoint)) return;
-      L.DomEvent.stop(e);
-
-      var bounds = new L.LatLngBounds(map.layerPointToLatLng(this._startLayerPoint), map.layerPointToLatLng(layerPoint));
-
-      //map.fitBounds(bounds);
-
-      map.fire(L.Map.SelectArea.AREA_SELECTED, {
-        bounds: bounds
-      });
-
-      if (this._autoDisable) this.disable();
-
-      this._moved = false;
-    }
-  }]);
-
-  return SelectArea;
-})(L.Map.BoxZoom);
-
-exports['default'] = SelectArea;
+// expose setting
 L.Map.mergeOptions({
   'selectArea': false
 });
 
 // register hook
-L.Map.addInitHook('addHandler', 'selectArea', SelectArea);
+L.Map.addInitHook('addHandler', 'selectArea', L.Map.SelectArea);
 
-// expose
-L.Map.SelectArea = SelectArea;
-module.exports = exports['default'];
-
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"leaflet":undefined}]},{},[1])(1)
 });
