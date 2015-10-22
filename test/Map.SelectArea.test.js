@@ -3,12 +3,20 @@ import L from 'leaflet';
 require('../');
 
 function triggerEvent (element, type, options = {}) {
-  let evt = document.createEvent("HTMLEvents");
-  evt.initEvent(type, false, true);
+  var evt = new MouseEvent(type, {
+    'view': window,
+    'bubbles': true,
+    'cancelable': true,
+    'clientX': options.clientX,
+    'clientY': options.clientY,
+    'which': options.which,
+    'ctrlKey': true
+  });
+  //evt.initEvent(type, false, true);
 
-  for (let option in options) {
-    evt[option] = options[option];
-  }
+  // for (let option in options) {
+  //   evt[option] = options[option];
+  // }
 
   element.dispatchEvent(evt);
   return evt;
@@ -43,9 +51,17 @@ tape('L.Map.SelectArea', (t) => {
     });
     t.ok(map.selectArea, 'handler instance');
     map.selectArea.enable();
+
+    // otherwise tests are broken,
+    // draggable takes over somehow and
+    // cannot work with fake events
+    map.dragging.disable();
+
     triggerEvent(map.selectArea._container, 'mousedown', {
       clientX: 100,
       clientY:100,
+      ctrlKey: true,
+      // target: map._container,
       which: 1 // button
     });
 
