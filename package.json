@@ -10,7 +10,7 @@
   "scripts": {
     "test": "browserify ./test/*.test.js | tap-closer | smokestack | tap-status",
     "start": "npm run watch & serve -p 3001",
-    "watch": "watchify -v -d -u 'leaflet' -s L.Control.Select example/js/app.js -o example/js/bundle.js",
+    "watch": "watchify --transform [babelify] -v -d -u 'leaflet' -s L.Control.Select example/js/app.js -o example/js/bundle.js",
     "build": "npm run build-js && npm run compress",
     "build-js": "cat src/Map.SelectArea.js > dist/Map.SelectArea.js",
     "compress": "uglifyjs ./dist/Map.SelectArea.js -m -c --comments drop_console=true,warnings=false > dist/Map.SelectArea.min.js"
@@ -18,13 +18,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/w8r/leaflet-area-select.git"
-  },
-  "browserify": {
-    "transform": [
-      [
-        "babelify"
-      ]
-    ]
   },
   "keywords": [
     "leaflet",

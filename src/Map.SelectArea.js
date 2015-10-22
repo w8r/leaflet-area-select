@@ -314,7 +314,7 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
     var map = this._map;
     var layerPoint = this._lastLayerPoint; // map.mouseEventToLayerPoint(e);
 
-    if (this._startLayerPoint.equals(layerPoint)) return;
+    if (!layerPoint || this._startLayerPoint.equals(layerPoint)) return;
     L.DomEvent.stop(e);
 
     var bounds = new L.LatLngBounds(
