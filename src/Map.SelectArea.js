@@ -323,15 +323,15 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
 
     //map.fitBounds(bounds);
 
-    map.fire(L.Map.SelectArea.AREA_SELECTED, {
-      bounds: bounds
-    });
-
     if (this._autoDisable) {
       this.disable();
     } else {
       this._setCursor();
     }
+
+    map.fire(L.Map.SelectArea.AREA_SELECTED, {
+      bounds: bounds
+    });
 
     this._moved = false;
   }
