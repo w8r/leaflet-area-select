@@ -283,7 +283,7 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
    * @param  {KeyboardEvent} e
    */
   _onKeyPress: function(e) {
-    if (this.options.ctrlKey && e.ctrlKey) {
+    if (this.options.ctrlKey && e.ctrlKey && this._beforeCursor === null) {
       this._setCursor();
       this._map.dragging.disable();
     }
@@ -302,6 +302,7 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
    */
   _restoreCursor: function() {
     this._container.style.cursor = this._beforeCursor;
+    this._beforeCursor = null;
   },
 
   /**
@@ -326,7 +327,7 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
     if (this._autoDisable) {
       this.disable();
     } else {
-      this._setCursor();
+      this._restoreCursor();
     }
 
     map.fire(L.Map.SelectArea.AREA_SELECTED, {
