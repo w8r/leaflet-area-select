@@ -192,7 +192,6 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
    * @override
    */
   addHooks: function() {
-    console.log('add hook');
     L.Map.BoxZoom.prototype.addHooks.call(this);
     L.DomEvent
       .on(document, 'keyup', this._onKeyUp, this)
