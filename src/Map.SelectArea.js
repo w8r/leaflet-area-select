@@ -212,6 +212,10 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
       return false;
     }
 
+    if (this.options.ctrlKey && e.ctrlKey && this._map.dragging.enabled()) {
+      this._onKeyPress(e);
+    }
+
     L.DomEvent.stop(e);
 
     var layerPoint = this._map.mouseEventToLayerPoint(e);
