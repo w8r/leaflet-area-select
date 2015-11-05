@@ -46,6 +46,12 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
      * @static
      * @type {String}
      */
+    AREA_SELECT_START: 'areaselectstart',
+
+    /**
+     * @static
+     * @type {String}
+     */
     AREA_SELECTION_TOGGLED: 'areaselecttoggled'
 
   },
@@ -85,6 +91,11 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
      * @type {L.Point}
      */
     this._lastLayerPoint = null;
+
+    /**
+     * @type {String|Null}
+     */
+    this._beforeCursor = null;
 
     this.setValidate(this.options.validate);
     this.setAutoDisable(this.options.autoDisable);
@@ -181,11 +192,13 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
    * @override
    */
   addHooks: function() {
+    console.log('add hook');
     L.Map.BoxZoom.prototype.addHooks.call(this);
     L.DomEvent
       .on(document, 'keyup', this._onKeyUp, this)
       .on(document, 'keydown', this._onKeyPress, this)
       .on(document, 'contextmenu', this._onMouseDown, this);
+    this._map.on('dragstart', this._onMouseDown, this);
   },
 
   /**
@@ -197,6 +210,7 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
       .off(document, 'keyup', this._onKeyUp, this)
       .off(document, 'keydown', this._onKeyPress, this)
       .off(document, 'contextmenu', this._onMouseDown, this);
+    this._map.off('dragstart', this._onMouseDown, this);
   },
 
   /**
@@ -212,16 +226,10 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
       return false;
     }
 
-    if (this.options.ctrlKey && e.ctrlKey && this._map.dragging.enabled()) {
-      this._onKeyPress(e);
-    }
-
     L.DomEvent.stop(e);
 
     var layerPoint = this._map.mouseEventToLayerPoint(e);
-    if(!this._validate(layerPoint)) {
-      return false;
-    }
+    if (!this._validate(layerPoint)) return false;
 
     L.DomUtil.disableTextSelection();
     L.DomUtil.disableImageDrag();
@@ -241,6 +249,7 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
     if (!this._moved) {
       this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._pane);
       L.DomUtil.setPosition(this._box, this._startLayerPoint);
+      this._map.fire(L.Map.SelectArea.AREA_SELECT_START);
     }
 
     var startPoint = this._startLayerPoint;
@@ -253,8 +262,8 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
     this._lastLayerPoint = layerPoint;
 
     var newPos = new L.Point(
-        Math.min(layerPoint.x, startPoint.x),
-        Math.min(layerPoint.y, startPoint.y)
+      Math.min(layerPoint.x, startPoint.x),
+      Math.min(layerPoint.y, startPoint.y)
     );
 
     L.DomUtil.setPosition(box, newPos);
@@ -287,8 +296,11 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
    * @param  {KeyboardEvent} e
    */
   _onKeyPress: function(e) {
-    if (this.options.ctrlKey && e.ctrlKey && this._beforeCursor === null) {
+    if (this.options.ctrlKey && (e.ctrlKey || e.type === 'dragstart')
+      && this._beforeCursor === null) {
+
       this._setCursor();
+      this._map.dragging._draggable._onUp(); // hardcore
       this._map.dragging.disable();
     }
   },
