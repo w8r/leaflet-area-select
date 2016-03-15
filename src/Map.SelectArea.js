@@ -196,8 +196,10 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
     L.DomEvent
       .on(document, 'keyup', this._onKeyUp, this)
       .on(document, 'keydown', this._onKeyPress, this)
-      .on(document, 'contextmenu', this._onMouseDown, this);
-    this._map.on('dragstart', this._onMouseDown, this);
+      .on(document, 'contextmenu', this._onMouseDown, this)
+      .on(window, 'blur', this._onBlur, this);
+    this._map
+      .on('dragstart', this._onMouseDown, this);
   },
 
   /**
@@ -208,7 +210,8 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
     L.DomEvent
       .off(document, 'keyup', this._onKeyUp, this)
       .off(document, 'keydown', this._onKeyPress, this)
-      .off(document, 'contextmenu', this._onMouseDown, this);
+      .off(document, 'contextmenu', this._onMouseDown, this)
+      .off(window, 'blur', this._onBlur, this);
     this._map.off('dragstart', this._onMouseDown, this);
   },
 
@@ -283,7 +286,7 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
       if (this._moved && this._box) {
         this._finish();
       }
-      this.disable();
+      // this.disable();
     } else if (this.options.ctrlKey) {
       this._restoreCursor();
       this._map.dragging.enable();
@@ -303,6 +306,16 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
       this._map.dragging.disable();
     }
   },
+
+  /**
+   * Window blur listener to restore state
+   * @param  {Event} e
+   */
+  _onBlur: function(e) {
+    this._restoreCursor();
+    this._map.dragging.enable();
+  },
+
 
   /**
    * Set crosshair cursor
