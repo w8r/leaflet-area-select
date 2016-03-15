@@ -1,6 +1,6 @@
 {
   "name": "leaflet-area-select",
-  "version": "0.2.6",
+  "version": "0.2.7",
   "description": "Area select tool for leaflet",
   "main": "index.js",
   "directories": {
@@ -10,6 +10,7 @@
   "scripts": {
     "test": "browserify --transform [babelify] ./test/*.test.js | tap-closer | smokestack | tap-status",
     "start": "npm run watch & serve -p 3001",
+    "wstart": "serve -p 3001",
     "watch": "watchify --transform [babelify] -v -d -u 'leaflet' -s L.Control.Select example/js/app.js -o example/js/bundle.js",
     "prebuild": "npm test",
     "build": "npm run build-js && npm run compress",
@@ -42,6 +43,7 @@
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",
     "less": "^2.5.3",
+    "serve": "^1.4.0",
     "smokestack": "^3.4.1",
     "tap-closer": "^1.0.0",
     "tap-status": "^1.0.1",
