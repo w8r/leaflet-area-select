@@ -358,11 +358,13 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
       this._restoreCursor();
     }
 
-    map.fire(L.Map.SelectArea.AREA_SELECTED, {
-      bounds: bounds
-    });
-
     this._moved = false;
+
+    setTimeout(function() {
+      map.fire(L.Map.SelectArea.AREA_SELECTED, {
+        bounds: bounds
+      });
+    }, 0);
   }
 
 });
