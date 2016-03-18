@@ -360,11 +360,11 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
 
     this._moved = false;
 
-    setTimeout(function() {
+    L.Util.requestAnimFrame(function() {
       map.fire(L.Map.SelectArea.AREA_SELECTED, {
         bounds: bounds
       });
-    }, 0);
+    });
   }
 
 });
