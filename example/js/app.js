@@ -20,13 +20,16 @@ let gj = global.gj = L.geoJson(require('../data/data.json'), {
   style: (feature) => {
     return {
       color: '#ff0000',
-      radius: 2
+      radius: 2,
+      opacity: 0.7,
+      weight: 1.5
     }
   },
   pointToLayer: (feature, latlng) => {
     return L.circleMarker(latlng, {
       radius: 2,
-      color: '#0ff'
+      color: '#0ff',
+      opacity: 0.7
     });
   }
 }).addTo(map);
@@ -85,7 +88,8 @@ function toggleRestriction() {
       weight: 2,
       color: '#0ff',
       fillOpacity: 0,
-      clickable: false
+      clickable: false,
+      opacity: 0.7
     }).addTo(map);
     map.selectArea.setValidate(function (p) {
       return bounds.contains(this._map.layerPointToLatLng(p));

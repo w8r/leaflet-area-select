@@ -36,7 +36,7 @@
   },
   "homepage": "https://github.com/w8r/leaflet-area-select#readme",
   "dependencies": {
-    "leaflet": "^0.7.5"
+    "leaflet": "^1.0.0-beta.2"
   },
   "devDependencies": {
     "babel-runtime": "^5.8.25",
