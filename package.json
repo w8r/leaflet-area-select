@@ -8,10 +8,11 @@
     "test": "test"
   },
   "scripts": {
+    "prestart": "npm install",
     "test": "browserify --transform [babelify] ./test/*.test.js | tap-closer | smokestack | tap-status",
-    "start": "npm run watch & serve -p 3001",
+    "start": "npm run watch & serve",
     "wstart": "serve -p 3001",
-    "watch": "watchify --transform [babelify] -v -d -u 'leaflet' -s L.Control.Select example/js/app.js -o example/js/bundle.js",
+    "watch": "watchify --transform [babelify] -v -d -s L.Control.Select example/js/app.js -o example/js/bundle.js",
     "prebuild": "npm test",
     "build": "npm run build-js && npm run compress",
     "build-js": "cat src/Map.SelectArea.js > dist/Map.SelectArea.js",
@@ -35,10 +36,9 @@
     "url": "https://github.com/w8r/leaflet-area-select/issues"
   },
   "homepage": "https://github.com/w8r/leaflet-area-select#readme",
-  "dependencies": {
-    "leaflet": "^1.0.0-beta.2"
-  },
+  "dependencies": {},
   "devDependencies": {
+    "leaflet": "^1.0.0-beta.2",
     "babel-runtime": "^5.8.25",
     "babelify": "^6.3.0",
     "browserify": "^11.2.0",

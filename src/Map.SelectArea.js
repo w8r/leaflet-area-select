@@ -15,7 +15,7 @@
     define(['leaflet'], factory);
   } else if (typeof module !== 'undefined') {
     // Node/CommonJS
-    L = global.L || require('leaflet');
+    L = require('leaflet');
     module.exports = factory(L);
   } else {
     // Browser globals
