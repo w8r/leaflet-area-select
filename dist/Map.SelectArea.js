@@ -302,7 +302,7 @@ L.Map.SelectArea = L.Map.BoxZoom.extend({
       && this._beforeCursor === null) {
 
       this._setCursor();
-      this._map.dragging._draggable._onUp(); // hardcore
+      this._map.dragging._draggable._onUp(e); // hardcore
       this._map.dragging.disable();
     }
   },
