@@ -67,6 +67,14 @@ map.selectArea.setCtrlKey(true);
 
 ```
 
+## Dependencies
+
+`leaflet@^0.7.3`, for `leaflet@~1.0.0` support check out `leaflet-1.0` branch and `beta` npm channel
+
+```shell
+$ npm install -S leaflet-area-select@beta
+```
+
 ## License
 
 MIT
