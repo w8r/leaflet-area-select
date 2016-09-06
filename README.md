@@ -1,4 +1,4 @@
-# leaflet-area-select [![npm version](https://badge.fury.io/js/leaflet-area-select.svg)](https://badge.fury.io/js/leaflet-area-select)
+# leaflet-area-select [![npm version](https://badge.fury.io/js/leaflet-area-select.svg)](https://badge.fury.io/js/leaflet-area-select) [![CircleCI](https://circleci.com/gh/w8r/leaflet-area-select/tree/leaflet-1.0.svg?style=svg)](https://circleci.com/gh/w8r/leaflet-area-select/tree/leaflet-1.0)
 
 Control to just select an area and provide bbox for it
 
