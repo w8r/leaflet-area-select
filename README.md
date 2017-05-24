@@ -58,12 +58,12 @@ map.selectArea.setValidate();
 
 ```javascript
 // dragging will be enabled and you can 
-// start selecting with Ctrl key pressed
-map.selectArea.setCtrlKey(true); 
+// start selecting with Ctrl key pressed (default: true)
+map.selectArea.setControlKey(true); 
 
 // box-zoom will be disabled and you can 
-// start selecting with Shift key pressed
-map.selectArea.setCtrlKey(true); 
+// start selecting with Shift key pressed (default: true)
+map.selectArea.setShiftKey(true); 
 
 ```
 
