@@ -1,32 +1,41 @@
 <!doctype html>
 <html>
-    <head>
-        <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.js"></script>-->
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.0.0-beta.2/leaflet.css">
-        <title>Leaflet Area Select</title>
-        <!--<script type="text/javascript" src="../dist/Map.SelectArea.js"></script>-->
-        <style type="text/css">
-        html, body, #map {
+
+<head>
+    <script type="text/javascript"
+        src="https://unpkg.com/leaflet@1.6.0/dist/leaflet-src.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css">
+    <title>Leaflet Area Select</title>
+    <!--<script type="text/javascript" src="../dist/Map.SelectArea.js"></script>-->
+    <style type="text/css">
+        html,
+        body,
+        #map {
             width: 100%;
             height: 100%;
             margin: 0;
             background: #222;
         }
+
         .leaflet-select-control {
             background: #ffffff;
             padding: 5px;
             cursor: pointer;
         }
+
         .leaflet-select-control:active,
         .leaflet-select-control.active {
             background: #cccccc;
         }
+
         .leaflet-select-control .icon {
             width: 15px;
             height: 15px;
             display: block;
             background: url('img/select.png') no-repeat;
         }
+
         .info {
             font-family: Helvetica, Arial, sans-serif;
             background: #fff;
@@ -36,6 +45,7 @@
             position: absolute;
             padding: 15px;
         }
+
         .info .result {
             display: block;
             margin-top: 10px;
@@ -47,16 +57,20 @@
             font-family: Monaco, Courier, monospace;
             padding: 5px;
         }
-        </style>
-    </head>
-    <body>
-        <div id="map"></div>
-        <div class="leaflet-bar info">
-            <label><input type="checkbox" id="restriction" checked> Fence</label><br>
-            <label><input type="checkbox" id="ctrl-key" checked> CTRL key</label><br>
-            <!--<label><input type="checkbox" id="shift-key"> SHIFT key</label>-->
-            <div class="result"></div>
-        </div>
-        <script type="text/javascript" src="js/bundle.js"></script>
-    </body>
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <div class="leaflet-bar info">
+        <label><input type="checkbox" id="restriction" checked>
+            Fence</label><br>
+        <label><input type="checkbox" id="ctrl-key" checked> CTRL
+            key</label><br>
+        <!--<label><input type="checkbox" id="shift-key"> SHIFT key</label>-->
+        <div class="result"></div>
+    </div>
+    <script type="text/javascript" src="js/bundle.js"></script>
+</body>
+
 </html>
