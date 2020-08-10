@@ -2,7 +2,7 @@
 
 Control to just select an area and provide bbox for it
 
-## [Demo](http://w8r.github.io/leaflet-area-select/example/)
+## [Demo](http://w8r.github.io/leaflet-area-select/)
 
 ## Include
 
@@ -25,7 +25,7 @@ import SelectArea from 'leaflet-area-select';
 
 ## Usage
 
-Including the handler into the project will automatically add it to the `L.Map`, 
+Including the handler into the project will automatically add it to the `L.Map`,
 so to enable/disable it you can use methods:
 
 ```javascript
@@ -57,13 +57,13 @@ map.selectArea.setValidate();
 ### Key-strokes
 
 ```javascript
-// dragging will be enabled and you can 
+// dragging will be enabled and you can
 // start selecting with Ctrl key pressed
-map.selectArea.setCtrlKey(true); 
+map.selectArea.setCtrlKey(true);
 
-// box-zoom will be disabled and you can 
+// box-zoom will be disabled and you can
 // start selecting with Shift key pressed
-map.selectArea.setCtrlKey(true); 
+map.selectArea.setCtrlKey(true);
 
 ```
 
