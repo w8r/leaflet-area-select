@@ -9,7 +9,7 @@
   },
   "scripts": {
     "prestart": "npm install",
-    "test": "browserify ./test/*.test.js | tape-run | tap-status",
+    "test": "browserify ./test/*.test.js | tape-run --render='tap-spec'",
     "start": "npm run watch & serve",
     "wstart": "serve -p 3001",
     "watch": "watchify -v -d -s L.Control.Select example/js/app.js -o example/js/bundle.js",
@@ -64,6 +64,7 @@
     "serve": "^11.3.2",
     "smokestack": "^3.4.1",
     "tap-closer": "^1.0.0",
+    "tap-spec": "^5.0.0",
     "tap-status": "^1.0.1",
     "tape": "^4.6.3",
     "tape-run": "^8.0.0",
