@@ -4,7 +4,7 @@
   "description": "Area select tool for leaflet",
   "main": "index.js",
   "directories": {
-    "example": "example",
+    "docs": "docs",
     "test": "test"
   },
   "scripts": {
@@ -12,7 +12,7 @@
     "test": "cross-env CI=1 browserify ./test/*.test.js | tape-puppet --no-sandbox",
     "start": "npm run watch & serve",
     "wstart": "serve -p 3001",
-    "watch": "watchify -v -d -s L.Control.Select example/js/app.js -o example/js/bundle.js",
+    "watch": "watchify -v -d -s L.Control.Select docs/js/app.js -o docs/js/bundle.js",
     "prebuild": "npm test",
     "build": "npm run build-js && npm run compress",
     "build-js": "cat src/Map.SelectArea.js > dist/Map.SelectArea.js",
