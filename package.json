@@ -62,7 +62,7 @@
     "browserify": "^14.3.0",
     "browserify-shim": "^3.8.14",
     "cross-env": "^7.0.2",
-    "serve": "^11.3.2",
+    "serve": "^14.1.2",
     "smokestack": "^3.4.1",
     "tap-closer": "^1.0.0",
     "tap-spec": "^5.0.0",
