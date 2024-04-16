@@ -222,7 +222,6 @@
       ) {
         return false;
       }
-      console.log("start");
 
       L.DomEvent.stop(e);
 

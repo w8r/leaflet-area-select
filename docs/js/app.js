@@ -49,7 +49,6 @@ function areaSelectToggled() {
     L.DomUtil.removeClass(button, "active");
     map.selectArea.disable();
   } else {
-    console.log("enable");
     L.DomUtil.addClass(button, "active");
     map.selectArea.enable();
   }
