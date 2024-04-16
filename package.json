@@ -1,6 +1,6 @@
 {
   "name": "leaflet-area-select",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Area select tool for leaflet",
   "main": "index.js",
   "directories": {
