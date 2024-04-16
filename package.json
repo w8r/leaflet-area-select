@@ -1,6 +1,6 @@
 {
   "name": "leaflet-area-select",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Area select tool for leaflet",
   "main": "index.js",
   "directories": {
@@ -13,7 +13,6 @@
     "start": "npm run watch & serve",
     "wstart": "serve -p 3001",
     "watch": "watchify -v -d -s L.Control.Select docs/js/app.js -o docs/js/bundle.js",
-    "prebuild": "npm test",
     "build": "npm run build-js && npm run compress",
     "build-js": "cat src/Map.SelectArea.js > dist/Map.SelectArea.js",
     "compress": "uglifyjs ./dist/Map.SelectArea.js -m -c --comments drop_console=true,warnings=false > dist/Map.SelectArea.min.js"
@@ -52,8 +51,8 @@
     "url": "https://github.com/w8r/leaflet-area-select/issues"
   },
   "homepage": "https://github.com/w8r/leaflet-area-select#readme",
-  "dependencies": {
-    "leaflet": "^1.6.0"
+  "peerDependencies": {
+    "leaflet": "1.9.4"
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",

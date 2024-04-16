@@ -10,50 +10,48 @@
 // UMD
 (function (factory) {
   var L;
-  if (typeof define === 'function' && define.amd) {
+  if (typeof define === "function" && define.amd) {
     // AMD
-    define(['leaflet'], factory);
-  } else if (typeof module !== 'undefined') {
+    define(["leaflet"], factory);
+  } else if (typeof module !== "undefined") {
     // Node/CommonJS
-    L = require('leaflet');
+    L = require("leaflet");
     module.exports = factory(L);
   } else {
     // Browser globals
-    if (typeof window.L === 'undefined') {
-      throw new Error('Leaflet must be loaded first');
+    if (typeof window.L === "undefined") {
+      throw new Error("Leaflet must be loaded first");
     }
     factory(window.L);
   }
 })(function (L) {
-
-  var trueFn = function () { return true; };
+  var trueFn = function () {
+    return true;
+  };
 
   /**
    * @class  L.Map.SelectArea
    * @extends {L.Map.BoxZoom}
    */
   L.Map.SelectArea = L.Map.BoxZoom.extend({
-
     statics: {
+      /**
+       * @static
+       * @type {String}
+       */
+      AREA_SELECTED: "areaselected",
 
       /**
        * @static
        * @type {String}
        */
-      AREA_SELECTED: 'areaselected',
+      AREA_SELECT_START: "areaselectstart",
 
       /**
        * @static
        * @type {String}
        */
-      AREA_SELECT_START: 'areaselectstart',
-
-      /**
-       * @static
-       * @type {String}
-       */
-      AREA_SELECTION_TOGGLED: 'areaselecttoggled'
-
+      AREA_SELECTION_TOGGLED: "areaselecttoggled",
     },
 
     options: {
@@ -61,7 +59,7 @@
       ctrlKey: true,
       validate: trueFn,
       autoDisable: false,
-      cursor: 'crosshair'
+      cursor: "crosshair",
     },
 
     /**
@@ -107,7 +105,7 @@
      */
     setValidate: function (validate) {
       var handler = this;
-      if (typeof validate !== 'function') {
+      if (typeof validate !== "function") {
         validate = trueFn;
       }
       this._validate = function (layerPoint) {
@@ -152,9 +150,7 @@
      */
     enable: function (validate, autoDisable) {
       if (this.options.shiftKey) {
-        if (this._map.boxZoom) {
-          this._map.boxZoom.disable();
-        }
+        if (this._map.boxZoom) this._map.boxZoom.disable();
       } else if (!this.options.ctrlKey) {
         this._map.dragging.disable();
       }
@@ -193,13 +189,11 @@
      */
     addHooks: function () {
       L.Map.BoxZoom.prototype.addHooks.call(this);
-      L.DomEvent
-        .on(document, 'keyup', this._onKeyUp, this)
-        .on(document, 'keydown', this._onKeyPress, this)
-        .on(document, 'contextmenu', this._onMouseDown, this)
-        .on(window, 'blur', this._onBlur, this);
-      this._map
-        .on('dragstart', this._onMouseDown, this);
+      L.DomEvent.on(document, "keyup", this._onKeyUp, this)
+        .on(document, "keydown", this._onKeyPress, this)
+        .on(document, "contextmenu", this._onMouseDown, this)
+        .on(window, "blur", this._onBlur, this);
+      this._map.on("dragstart", this._onMouseDown, this);
     },
 
     /**
@@ -207,12 +201,11 @@
      */
     removeHooks: function () {
       L.Map.BoxZoom.prototype.removeHooks.call(this);
-      L.DomEvent
-        .off(document, 'keyup', this._onKeyUp, this)
-        .off(document, 'keydown', this._onKeyPress, this)
-        .off(document, 'contextmenu', this._onMouseDown, this)
-        .off(window, 'blur', this._onBlur, this);
-      this._map.off('dragstart', this._onMouseDown, this);
+      L.DomEvent.off(document, "keyup", this._onKeyUp, this)
+        .off(document, "keydown", this._onKeyPress, this)
+        .off(document, "contextmenu", this._onMouseDown, this)
+        .off(window, "blur", this._onBlur, this);
+      this._map.off("dragstart", this._onMouseDown, this);
     },
 
     /**
@@ -222,11 +215,14 @@
       this._moved = false;
       this._lastLayerPoint = null;
 
-      if ((this.options.shiftKey && !e.shiftKey) ||
+      if (
+        (this.options.shiftKey && !e.shiftKey) ||
         (this.options.ctrlKey && !e.ctrlKey) ||
-        ((e.which !== 1) && (e.button !== 1))) {
+        (e.which !== 1 && e.button !== 1)
+      ) {
         return false;
       }
+      console.log("start");
 
       L.DomEvent.stop(e);
 
@@ -238,10 +234,9 @@
 
       this._startLayerPoint = layerPoint;
 
-      L.DomEvent
-        .on(document, 'mousemove', this._onMouseMove, this)
-        .on(document, 'mouseup', this._onMouseUp, this)
-        .on(document, 'keydown', this._onKeyDown, this);
+      L.DomEvent.on(document, "mousemove", this._onMouseMove, this)
+        .on(document, "mouseup", this._onMouseUp, this)
+        .on(document, "keydown", this._onKeyDown, this);
     },
 
     /**
@@ -249,7 +244,7 @@
      */
     _onMouseMove: function (e) {
       if (!this._moved) {
-        this._box = L.DomUtil.create('div', 'leaflet-zoom-box', this._pane);
+        this._box = L.DomUtil.create("div", "leaflet-zoom-box", this._pane);
         L.DomUtil.setPosition(this._box, this._startLayerPoint);
         this._map.fire(L.Map.SelectArea.AREA_SELECT_START);
       }
@@ -273,8 +268,8 @@
       this._moved = true;
 
       // TODO refactor: remove hardcoded 4 pixels
-      box.style.width = (Math.max(0, Math.abs(offset.x) - 4)) + 'px';
-      box.style.height = (Math.max(0, Math.abs(offset.y) - 4)) + 'px';
+      box.style.width = Math.max(0, Math.abs(offset.x) - 4) + "px";
+      box.style.height = Math.max(0, Math.abs(offset.y) - 4) + "px";
     },
 
     /**
@@ -298,9 +293,11 @@
      * @param  {KeyboardEvent} e
      */
     _onKeyPress: function (e) {
-      if (this.options.ctrlKey && (e.ctrlKey || e.type === 'dragstart')
-        && this._beforeCursor === null) {
-
+      if (
+        this.options.ctrlKey &&
+        (e.ctrlKey || e.type === "dragstart") &&
+        this._beforeCursor === null
+      ) {
         this._setCursor();
         this._map.dragging._draggable._onUp(e); // hardcore
         this._map.dragging.disable();
@@ -315,7 +312,6 @@
       this._restoreCursor();
       this._map.dragging.enable();
     },
-
 
     /**
      * Set crosshair cursor
@@ -337,7 +333,6 @@
      * @override
      */
     _onMouseUp: function (e) {
-
       this._finish();
 
       var map = this._map;
@@ -348,7 +343,8 @@
 
       var bounds = new L.LatLngBounds(
         map.layerPointToLatLng(this._startLayerPoint),
-        map.layerPointToLatLng(layerPoint));
+        map.layerPointToLatLng(layerPoint)
+      );
 
       //map.fitBounds(bounds);
 
@@ -362,19 +358,17 @@
 
       L.Util.requestAnimFrame(function () {
         map.fire(L.Map.SelectArea.AREA_SELECTED, {
-          bounds: bounds
+          bounds: bounds,
         });
       });
-    }
-
+    },
   });
 
   // expose setting
   L.Map.mergeOptions({
-    'selectArea': false
+    selectArea: false,
   });
 
   // register hook
-  L.Map.addInitHook('addHandler', 'selectArea', L.Map.SelectArea);
-
+  L.Map.addInitHook("addHandler", "selectArea", L.Map.SelectArea);
 });
