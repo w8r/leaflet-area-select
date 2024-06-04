@@ -135,15 +135,15 @@ declare module "leaflet" {
     /**
      * Fired when the area selection is completed.
      */
-    selectareaselected?: (event: SelectAreaEvent) => void | undefined;
+    "selectarea:selected"?: (event: SelectAreaEvent) => void | undefined;
     /**
      * Fired when the area selection starts.
      */
-    selectareastart?: LeafletEventHandlerFn | undefined;
+    "selectarea:start"?: LeafletEventHandlerFn | undefined;
 
     /**
      * Fired when the area selection toggles on or off.
      */
-    selectareatoggled?: LeafletEventHandlerFn | undefined;
+    "selectarea:toggled"?: LeafletEventHandlerFn | undefined;
   }
 }
