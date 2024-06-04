@@ -121,14 +121,14 @@ declare module "leaflet" {
     bounds: LatLngBounds;
 
     /**
-     * The starting point of the selection.
+     * The starting LatLng of the selection.
      */
-    start: Point;
+    start: LatLng;
 
     /**
-     * The ending point of the selection.
+     * The ending LatLng of the selection.
      */
-    end: Point;
+    end: LatLng;
   }
 
   interface LeafletEventHandlerFnMap {
