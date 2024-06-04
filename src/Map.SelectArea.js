@@ -39,19 +39,19 @@
        * @static
        * @type {String}
        */
-      AREA_SELECTED: "areaselected",
+      SELECT_AREA_SELECTED: "selectarea:selected",
 
       /**
        * @static
        * @type {String}
        */
-      AREA_SELECT_START: "areaselectstart",
+      SELECT_AREA_START: "selectarea:start",
 
       /**
        * @static
        * @type {String}
        */
-      AREA_SELECTION_TOGGLED: "areaselecttoggled",
+      SELECT_AREA_TOGGLED: "selectarea:toggled",
     },
 
     options: {
@@ -161,7 +161,7 @@
       if (validate) this.setValidate(validate);
       this.setAutoDisable(autoDisable);
 
-      this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
+      this._map.fire(L.Map.SelectArea.SELECT_AREA_TOGGLED);
     },
 
     /**
@@ -180,7 +180,7 @@
         this._map.dragging.enable();
       }
 
-      this._map.fire(L.Map.SelectArea.AREA_SELECTION_TOGGLED);
+      this._map.fire(L.Map.SelectArea.SELECT_AREA_TOGGLED);
     },
 
     /**
@@ -245,7 +245,7 @@
       if (!this._moved) {
         this._box = L.DomUtil.create("div", "leaflet-zoom-box", this._pane);
         L.DomUtil.setPosition(this._box, this._startLayerPoint);
-        this._map.fire(L.Map.SelectArea.AREA_SELECT_START);
+        this._map.fire(L.Map.SelectArea.SELECT_AREA_START);
       }
 
       var startPoint = this._startLayerPoint;
@@ -355,7 +355,7 @@
       this._moved = false;
 
       L.Util.requestAnimFrame(function () {
-        map.fire(L.Map.SelectArea.AREA_SELECTED, {
+        map.fire(L.Map.SelectArea.SELECT_AREA_SELECTED, {
           bounds: bounds,
           start: start,
           end: end,

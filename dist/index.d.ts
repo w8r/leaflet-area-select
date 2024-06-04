@@ -133,18 +133,17 @@ declare module "leaflet" {
 
   interface LeafletEventHandlerFnMap {
     /**
+     * Fired when the area selection is completed.
+     */
+    selectareaselected?: (event: SelectAreaEvent) => void | undefined;
+    /**
      * Fired when the area selection starts.
      */
-    areaselectstart?: LeafletEventHandlerFn | undefined;
+    selectareastart?: LeafletEventHandlerFn | undefined;
 
     /**
      * Fired when the area selection toggles on or off.
      */
-    areaselecttoggled?: LeafletEventHandlerFn | undefined;
-
-    /**
-     * Fired when the area selection is completed.
-     */
-    areaselected?: (event: SelectAreaEvent) => void | undefined;
+    selectareatoggled?: LeafletEventHandlerFn | undefined;
   }
 }
