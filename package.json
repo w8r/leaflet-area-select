@@ -3,6 +3,7 @@
   "version": "1.0.9",
   "description": "Area select tool for leaflet",
   "main": "index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "docs": "docs",
     "test": "test"
