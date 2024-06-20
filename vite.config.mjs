@@ -11,11 +11,9 @@ const banner = `
  */`;
 
 export default defineConfig({
-  root: "docs",
-
   build: {
     lib: {
-      entry: "src/index.mjs",
+      entry: "./src/index.mjs",
       name: "L.Map.SelectArea",
       formats: ["es", "cjs", "umd"],
       fileName: (format) =>

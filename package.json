@@ -30,7 +30,7 @@
   "scripts": {
     "test": "cross-env CI=1 browserify ./test/Map.SelectArea.test.js | tape-puppet --no-sandbox",
     "start": "vite -c docs/vite.config.mjs",
-    "docs": "vite build -c docs/vite.config.mjs",
+    "docs": "vite build -c ./docs/vite.config.mjs",
     "build": "vite build"
   },
   "repository": {
