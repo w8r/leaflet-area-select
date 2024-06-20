@@ -3,18 +3,19 @@
   "version": "1.0.9",
   "description": "Area select tool for leaflet",
   "main": "index.js",
+  "types": "dist/index.d.ts",
   "directories": {
     "docs": "docs",
     "test": "test"
   },
   "scripts": {
     "prestart": "npm install",
-    "test": "cross-env CI=1 browserify ./test/*.test.js | tape-puppet --no-sandbox",
+    "test": "cross-env CI=1 browserify ./test/Map.SelectArea.test.js | tape-puppet --no-sandbox",
     "start": "npm run watch & serve",
     "wstart": "serve -p 3001",
     "watch": "watchify -v -d -s L.Control.Select docs/js/app.js -o docs/js/bundle.js",
     "build": "npm run build-js && npm run compress",
-    "build-js": "cat src/Map.SelectArea.js > dist/Map.SelectArea.js",
+    "build-js": "shx cat src/Map.SelectArea.js > dist/Map.SelectArea.js",
     "compress": "uglifyjs ./dist/Map.SelectArea.js -m -c --comments drop_console=true,warnings=false > dist/Map.SelectArea.min.js"
   },
   "repository": {

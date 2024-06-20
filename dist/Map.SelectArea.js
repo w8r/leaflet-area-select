@@ -340,10 +340,9 @@
       if (!layerPoint || this._startLayerPoint.equals(layerPoint)) return;
       L.DomEvent.stop(e);
 
-      var bounds = new L.LatLngBounds(
-        map.layerPointToLatLng(this._startLayerPoint),
-        map.layerPointToLatLng(layerPoint)
-      );
+      var start = map.layerPointToLatLng(this._startLayerPoint);
+      var end = map.layerPointToLatLng(layerPoint);
+      var bounds = new L.LatLngBounds(start, end);
 
       //map.fitBounds(bounds);
 
@@ -358,6 +357,8 @@
       L.Util.requestAnimFrame(function () {
         map.fire(L.Map.SelectArea.AREA_SELECTED, {
           bounds: bounds,
+          start: start,
+          end: end,
         });
       });
     },
