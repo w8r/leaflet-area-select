@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script
+      type="text/javascript"
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet-src.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <title>Leaflet Area Select</title>
+    <link href="./docs/index.css" rel="stylesheet" type="text/css" />
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <div class="leaflet-bar info">
+      <label><input type="checkbox" id="restriction" checked /> Fence</label
+      ><br />
+      <label><input type="checkbox" id="ctrl-key" checked /> CTRL key</label
+      ><br />
+      <!--<label><input type="checkbox" id="shift-key"> SHIFT key</label>-->
+      <div class="result"></div>
+    </div>
+    <script type="module" src="./docs/index.mjs"></script>
+  </body>
+</html>

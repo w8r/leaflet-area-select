@@ -2,21 +2,36 @@
   "name": "leaflet-area-select",
   "version": "1.0.9",
   "description": "Area select tool for leaflet",
-  "main": "index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "unpkg": "dist/index.js",
+  "jsdelivr": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./index.d.ts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "types": "index.d.ts",
   "directories": {
     "docs": "docs",
     "test": "test"
   },
   "scripts": {
-    "prestart": "npm install",
     "test": "cross-env CI=1 browserify ./test/Map.SelectArea.test.js | tape-puppet --no-sandbox",
-    "start": "npm run watch & serve",
-    "wstart": "serve -p 3001",
-    "watch": "watchify -v -d -s L.Control.Select docs/js/app.js -o docs/js/bundle.js",
-    "build": "npm run build-js && npm run compress",
-    "build-js": "shx cat src/Map.SelectArea.js > dist/Map.SelectArea.js",
-    "compress": "uglifyjs ./dist/Map.SelectArea.js -m -c --comments drop_console=true,warnings=false > dist/Map.SelectArea.min.js"
+    "start": "vite -c docs/vite.config.mjs",
+    "docs": "vite build -c docs/vite.config.mjs",
+    "build": "vite build"
   },
   "repository": {
     "type": "git",
@@ -62,6 +77,7 @@
     "browserify": "^14.3.0",
     "browserify-shim": "^3.8.14",
     "cross-env": "^7.0.2",
+    "gh-pages": "^6.1.1",
     "serve": "^14.1.2",
     "smokestack": "^3.4.1",
     "tap-closer": "^1.0.0",
@@ -71,6 +87,7 @@
     "tape-puppet": "^0.3.0",
     "tape-run": "^11.0.0",
     "uglify-js": "^3.0.10",
+    "vite": "^5.3.1",
     "watchify": "^3.9.0"
   }
 }
