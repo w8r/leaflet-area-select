@@ -61,7 +61,7 @@ map.selectArea.setControlKey(true);
 
 // box-zoom will be disabled and you can
 // start selecting with Shift key pressed
-map.selectArea.setControlKey(true);
+map.selectArea.setShiftKey(true);
 ```
 
 ## License
