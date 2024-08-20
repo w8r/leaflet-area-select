@@ -37,7 +37,7 @@ let map = new L.Map("map", {
 // or
 map.selectArea.enable();
 
-map.on("areaselected", (e) => {
+map.on("selectarea:selected", (e) => {
     console.log(e.bounds.toBBoxString()); // lon, lat, lon, lat
 });
 
